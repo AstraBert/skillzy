@@ -37,11 +37,19 @@ enum Commands {
         /// License name or reference to a bundled license file.
         #[arg(short, long, default_value=None)]
         license: Option<String>,
+
+        /// Space-delimited list of pre-approved tools the skill may use. Experimental.
+        #[arg(short, long, default_value=None)]
+        allowed_tools: Option<String>,
+
+        /// Key-value pair (in the form of `KEY=VALUE`) serving as metadata for the skill. Can be used multiple times.
+        #[arg(short, long)]
+        metadata: Vec<String>,
     },
     /// Check the frontmatter of a skill
     Check {
-        /// Path to the skill file to check.
-        path: String,
+        /// Path to the skill file to check. You can provide multiple paths
+        paths: Vec<String>,
     },
 }
 
@@ -53,24 +61,30 @@ fn main() -> Result<()> {
             description,
             compatibility,
             license,
+            allowed_tools,
+            metadata,
         } => {
             init_skill(
                 &name,
                 &description,
                 compatibility.as_deref(),
                 license.as_deref(),
+                allowed_tools.as_deref(),
+                metadata,
             )?;
             println!(
                 "\x1b[1;37mSkill for \x1b[1;32m{}\x1b[1;37m successfully initialized at \x1b[1;35m{}{}/{}",
                 name, SKILLS_DIR, name, SKILL_FILE
             );
         }
-        Commands::Check { path } => {
-            check(&path)?;
-            println!(
-                "\x1b[1;92mSuccess!\n\x1b[1;37mSkill at \x1b[1;35m{}\x1b[1;37m is compliant with the specification adopted by skills.sh and agentskills.io",
-                path
-            );
+        Commands::Check { paths } => {
+            for path in paths {
+                check(&path)?;
+                println!(
+                    "\x1b[1;92mSuccess!\n\x1b[1;37mSkill at \x1b[1;35m{}\x1b[1;37m is compliant with the specification adopted by skills.sh and agentskills.io",
+                    path
+                );
+            }
         }
     }
     Ok(())

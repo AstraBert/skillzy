@@ -305,6 +305,7 @@ dependencies = [
  "markdown-frontmatter",
  "regex",
  "serde",
+ "serde_json",
 ]
 
 [[package]]
