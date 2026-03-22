@@ -53,6 +53,25 @@ Validate the frontmatter of one or more existing skill files.
 skillzy check path/to/SKILL.md path/to/another/SKILL.md
 ```
 
+## Use as an Agent Skill
+
+You can install **skillzy** as an agent skill with:
+
+```bash
+npx skills add AstraBert/skillzy
+```
+
+## Use as a GitHub Action
+
+You can run **skillzy** within your GitHub Actions using the [AstraBert/run-skillzy](https://github.com/AstraBert/run-skillzy) action: 
+
+```yaml
+- name: Run Skillzy on all SKILL.md files in the skills/ directory
+  uses: AstraBert/run-skillzy@v0.1.0
+```
+
+This will set up skillzy and then check all the SKILL.md files in the `skills/` folder.
+
 ## License
 
 MIT
