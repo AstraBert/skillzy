@@ -90,3 +90,67 @@ pub fn check(skill_file: &str) -> Result<()> {
 
     Ok(())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_check_valid() {
+        let result = check("testfiles/valid.md");
+        assert!(result.is_ok());
+    }
+
+    #[test]
+    fn test_check_invalid_name() {
+        let result = check("testfiles/invalid-name.md");
+        assert!(result.is_err_and(
+            |e| e.to_string() == "`name` is not compliant with requirements".to_string()
+        ));
+    }
+
+    #[test]
+    fn test_check_invalid_desc() {
+        let result = check("testfiles/invalid-desc.md");
+        assert!(result.is_err_and(|e| {
+            e.to_string()
+                == "`description` must be more than 0 and less than 1024 charachters in length"
+                    .to_string()
+        }));
+    }
+
+    #[test]
+    fn test_check_invalid_compat() {
+        let result = check("testfiles/invalid-compat.md");
+        assert!(result.is_err_and(|e| {
+            e.to_string()
+                == "`compatibility` must be more than 0 and less than 500 charachters in length"
+                    .to_string()
+        }));
+    }
+
+    #[test]
+    fn test_check_invalid_license() {
+        let result = check("testfiles/invalid-license.md");
+        assert!(
+            result
+                .is_err_and(|e| e.to_string() == "`license` should contain something".to_string())
+        );
+    }
+
+    #[test]
+    fn test_check_invalid_tools() {
+        let result = check("testfiles/invalid-tools.md");
+        assert!(result.is_err_and(
+            |e| e.to_string() == "`allowed-tools` should be a string containing whitespace-separated tool names for the agent to use".to_string()
+        ));
+    }
+
+    #[test]
+    fn test_check_invalid_meta() {
+        let result = check("testfiles/invalid-meta.md");
+        assert!(result.is_err_and(
+            |e| e.to_string() == "`metadata` should have a non-zero length".to_string()
+        ));
+    }
+}
